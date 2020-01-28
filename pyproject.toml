@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "foosball"
 version = "0.1.0"
-description = "\"Compute rankings for foosball"
-authors = ["Evaldas Kazlauskis <evaldas.kazlauskis@cujo.com>"]
+description = "Compute rankings for foosball"
+authors = ["Evaldas Kazlauskis <evaldas@evalkaz.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.6"

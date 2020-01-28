@@ -1,3 +1,4 @@
+from collections import defaultdict
 import pandas as pd
 import trueskill as ts
 
@@ -5,18 +6,6 @@ from typing import Iterable, Tuple
 
 
 DATE_COLUMN = "Date"
-
-
-def load_players(file_path: str) -> dict:
-    players = {}
-
-    with open(file_path) as infile:
-        for line in infile.readlines():
-            name = line.strip()
-
-            players[name] = ts.Rating()
-
-    return players
 
 
 def compute_rank(score1: float, score2: float) -> Tuple[float, float]:
@@ -33,7 +22,7 @@ def compute_rank(score1: float, score2: float) -> Tuple[float, float]:
 def append(
     name: str, players: dict, team: Iterable[str], skills: Iterable[ts.Rating]
 ) -> Tuple[Iterable[str], Iterable[ts.Rating]]:
-    if name is not None and name in players:
+    if name is not None and name != "":
         return team + [name], skills + [players[name]]
 
     return team, skills
@@ -44,13 +33,14 @@ def update(players: dict, team: Iterable[str], ratings: Iterable[ts.Rating]):
         players[name] = rating
 
 
-def main(players_file: str, games_file: str, ratings_file: str):
+def main(games_file: str, ratings_file: str):
     # Load data.
-    players = load_players(players_file)
+    players = defaultdict(lambda: ts.Rating())
     games = pd.read_csv(games_file)
 
     # Sort data based on date.
     games.sort_values(by=[DATE_COLUMN], inplace=True)
+    games.fillna("", inplace=True)
 
     for _, (date, pl1, pl2, sc1, sc2, pl3, pl4) in games.iterrows():
         team1 = []
@@ -75,11 +65,11 @@ def main(players_file: str, games_file: str, ratings_file: str):
     # Save ratings.
     result = []
     for name, rating in players.items():
-        result.append({"name": name, "mu": rating.mu, "sigma": rating.sigma})
+        result.append({"Name": name, "Mu": rating.mu, "Sigma": rating.sigma})
 
     df = pd.DataFrame(result)
     df.to_csv(ratings_file, index=False)
 
 
 if __name__ == "__main__":
-    main("data/players.txt", "data/games.csv", "data/results.csv")
+    main("data/games.csv", "data/results.csv")

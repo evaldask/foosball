@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "foosball"
+version = "0.1.0"
+description = "\"Compute rankings for foosball"
+authors = ["Evaldas Kazlauskis <evaldas.kazlauskis@cujo.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.6"
+pandas = "^0.25.3"
+trueskill = "^0.4.5"
+
+[tool.poetry.dev-dependencies]
+black = "^19.10b0"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
